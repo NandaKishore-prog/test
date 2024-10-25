@@ -1,0 +1,93 @@
+package main;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import snake_game.*;
+import mem_gamee.*;
+import spaceinvaders.*;
+import montyandflower.*;
+
+public class main implements ActionListener {
+	JFrame frame;
+	JButton button1,button2,button3,button4,button5;
+	ImageIcon icon1=new ImageIcon(main.class.getResource("snake.jpg"));
+	  Image image1 = icon1.getImage(); // Get the Image object from the icon
+      Image resizedImage1 = image1.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH); // Resize to 100x100
+      ImageIcon resizedIcon1= new ImageIcon(resizedImage1); // Create a new ImageIcon with the resized image
+      ImageIcon icon2=new ImageIcon(main.class.getResource("memory card.jpg"));
+	  Image image2 = icon2.getImage(); // Get the Image object from the icon
+      Image resizedImage2= image2.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH); // Resize to 100x100
+      ImageIcon resizedIcon2= new ImageIcon(resizedImage2); // Create a new ImageIcon with the resized image
+      ImageIcon icon3=new ImageIcon(main.class.getResource("whacmole.png"));
+	  Image image3 = icon3.getImage(); // Get the Image object from the icon
+      Image resizedImage3= image3.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH); // Resize to 100x100
+      ImageIcon resizedIcon3= new ImageIcon(resizedImage3); // Create a new ImageIcon with the resized image
+      ImageIcon icon4=new ImageIcon(main.class.getResource("spaceinvader.png"));
+	  Image image4 = icon4.getImage(); // Get the Image object from the icon
+      Image resizedImage4= image4.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH); // Resize to 100x100
+      ImageIcon resizedIcon4= new ImageIcon(resizedImage4); // Create a new ImageIcon with the resized image
+
+	public  main() {
+		frame =new JFrame();
+		button1=new JButton();
+		button1.setIcon(resizedIcon1);
+		button2=new JButton();
+		button2.setIcon(resizedIcon2);
+
+		button3=new JButton();
+		button3.setIcon(resizedIcon3);
+		button4=new JButton();
+		button4.setIcon(resizedIcon4);
+		frame.setLayout(null);
+
+		button1.setBounds(50,50,300,300);
+		button2.setBounds(400,50,300,300);
+		button3.setBounds(50,400,300,300);
+		button4.setBounds(400,400,300,300);
+        frame.add(button1);frame.add(button2);
+        frame.add(button3);
+        frame.add(button4);
+
+		frame.setSize(800,800);
+		frame.setVisible(true);
+		button1.addActionListener(this);
+		button2.addActionListener(this);
+		button3.addActionListener(this);
+		button4.addActionListener(this);
+
+	}
+	public static void main(String[] args) {
+
+    new main();
+    
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==button1) {
+			SnakeGame game=new SnakeGame();
+			game.main(null);
+		}
+		if(e.getSource()==button2) {
+			App app=new App();
+			app.main(null);
+			frame.setVisible(false);
+
+		}
+		if(e.getSource()==button3) {
+			App1 app=new App1();
+			App1.main(null);
+		}
+		if(e.getSource()==button4) {
+			SpaceInvaders game4=new SpaceInvaders();
+			game4.main(null);
+			frame.setVisible(false);
+		}
+		
+	}
+
+}

@@ -1,0 +1,54 @@
+package snake_game;
+
+
+import javax.swing.*;
+
+import main.Main1;
+
+public class SnakeGame {  
+	private Main1 mainMenu;
+
+	public SnakeGame(Main1 mainMenu) {
+        this.mainMenu = mainMenu;
+        // Initialize game components
+    }
+	
+	
+	
+	
+	// In src/snake_game/SnakeGame.java
+	
+
+	
+	    public void start() {
+	        // Create and display the game frame
+	        GameFrame gameFrame = new GameFrame(null, null);
+	        gameFrame.setVisible(true);
+	        
+	        public void closeGame() {
+	            // Clean up game resources
+	            // Then, call this to show the main menu again
+	            mainMenu.showMainMenu();
+	        }
+	    
+	}
+
+	
+	
+	
+	
+	
+    public static void main(String[] args) {
+        // Start the game by showing the login panel
+    	new SnakeGame(null).start();
+        JFrame frame = new JFrame();
+        frame.add(new LoginPanel(frame)); // Pass the frame to the LoginPanel
+        frame.setTitle("Snake Game - Login");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false); // Prevent resizing the frame
+        frame.setPreferredSize(new java.awt.Dimension(1300, 750)); // Set preferred size
+        frame.pack();
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+    }
+}

@@ -1,0 +1,219 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class SpaceInvaders extends JPanel implements ActionListener {
+
+    private Timer timer;
+    private final int BOARD_WIDTH = 800;
+    private final int BOARD_HEIGHT = 600;
+    private final int TILE_SIZE = 30;
+    private final int ALIEN_WIDTH = 40;
+    private final int ALIEN_HEIGHT = 30;
+    private final int ALIEN_COLUMNS = 11;
+    private final int ALIEN_ROWS = 5;
+    private final int ALIEN_START_X = TILE_SIZE;
+    private final int ALIEN_START_Y = TILE_SIZE;
+    private final int ALIEN_HORIZONTAL_GAP = 10;
+    private final int ALIEN_VERTICAL_GAP = 10;
+    private final int ALIEN_SPEED = 2;
+    private int alienDirection = 1;
+
+    private ArrayList<AlienBlock> alienArray;
+    private int shipX, shipY;
+    private int shipHP = 100;
+    private boolean gameOver = false;
+    private Random random = new Random();
+
+    private Image shipImage;
+    private ArrayList<Image> alienImages;
+
+    public SpaceInvaders() {
+        setFocusable(true);
+        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        shipX = BOARD_WIDTH / 2;
+        shipY = BOARD_HEIGHT - 50;
+
+        alienArray = new ArrayList<>();
+        alienImages = new ArrayList<>();
+
+        alienImages.add(new ImageIcon("alien1.png").getImage());
+        alienImages.add(new ImageIcon("alien2.png").getImage());
+
+        addKeyListener(new TAdapter());
+
+        timer = new Timer(20, this);
+        timer.start();
+
+        createAliens();
+    }
+
+    // Create aliens in a grid format
+    private void createAliens() {
+        alienArray.clear();
+        for (int row = 0; row < ALIEN_ROWS; row++) {
+            for (int col = 0; col < ALIEN_COLUMNS; col++) {
+                Image alienImg = alienImages.get(random.nextInt(alienImages.size()));
+                int x = ALIEN_START_X + col * (ALIEN_WIDTH + ALIEN_HORIZONTAL_GAP);
+                int y = ALIEN_START_Y + row * (ALIEN_HEIGHT + ALIEN_VERTICAL_GAP);
+                AlienBlock alien = new AlienBlock(x, y, ALIEN_WIDTH, ALIEN_HEIGHT, alienImg, 2); // Aliens have 2 HP
+                alienArray.add(alien);
+            }
+        }
+    }
+
+    // Update alien movement
+    private void moveAliens() {
+        boolean hitEdge = false;
+        for (AlienBlock alien : alienArray) {
+            if (alien.alive) {
+                if (alien.x + ALIEN_WIDTH >= BOARD_WIDTH || alien.x <= 0) {
+                    hitEdge = true;
+                    break;
+                }
+            }
+        }
+
+        if (hitEdge) {
+            alienDirection *= -1; // Reverse direction
+            for (AlienBlock alien : alienArray) {
+                alien.y += ALIEN_HEIGHT / 2; // Move aliens down half their height
+            }
+        }
+
+        for (AlienBlock alien : alienArray) {
+            if (alien.alive) {
+                alien.x += alienDirection * ALIEN_SPEED; // Move aliens left/right
+            }
+        }
+    }
+
+    // Check if aliens reach the bottom
+    private void checkAlienBottomCollision() {
+        for (AlienBlock alien : alienArray) {
+            if (alien.alive && alien.y + ALIEN_HEIGHT >= shipY) {
+                gameOver = true; // End game if aliens reach the bottom
+            }
+        }
+    }
+
+    // Draw game objects
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (!gameOver) {
+            drawShip(g);
+            drawAliens(g);
+        } else {
+            drawGameOver(g);
+        }
+
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    private void drawShip(Graphics g) {
+        g.drawImage(shipImage, shipX, shipY, TILE_SIZE, TILE_SIZE, this);
+    }
+
+    private void drawAliens(Graphics g) {
+        for (AlienBlock alien : alienArray) {
+            if (alien.alive) {
+                g.drawImage(alien.image, alien.x, alien.y, ALIEN_WIDTH, ALIEN_HEIGHT, this);
+            }
+        }
+    }
+
+    private void drawGameOver(Graphics g) {
+        String msg = "Game Over";
+        Font small = new Font("Helvetica", Font.BOLD, 40);
+        FontMetrics fm = getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(msg, (BOARD_WIDTH - fm.stringWidth(msg)) / 2, BOARD_HEIGHT / 2);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!gameOver) {
+            moveAliens();
+            checkAlienBottomCollision();
+            repaint();
+        }
+    }
+
+    private class TAdapter extends KeyAdapter {
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            keyReleasedEvent(e);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            keyPressedEvent(e);
+        }
+    }
+
+    private void keyPressedEvent(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_LEFT) {
+            if (shipX > 0) {
+                shipX -= 10;
+            }
+        }
+
+        if (key == KeyEvent.VK_RIGHT) {
+            if (shipX < BOARD_WIDTH - TILE_SIZE) {
+                shipX += 10;
+            }
+        }
+
+        if (key == KeyEvent.VK_SPACE) {
+            // Implement shooting logic here
+        }
+    }
+
+    private void keyReleasedEvent(KeyEvent e) {
+        // Optional: Handle if required
+    }
+
+    // AlienBlock class
+    private class AlienBlock {
+        int x, y, width, height, hp;
+        Image image;
+        boolean alive;
+
+        public AlienBlock(int x, int y, int width, int height, Image image, int hp) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.image = image;
+            this.hp = hp;
+            this.alive = true;
+        }
+
+        // Handle damage to the alien
+        public void takeDamage(int damage) {
+            hp -= damage;
+            if (hp <= 0) {
+                alive = false;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Space Invaders");
+        SpaceInvaders game = new SpaceInvaders();
+        frame.add(game);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+}

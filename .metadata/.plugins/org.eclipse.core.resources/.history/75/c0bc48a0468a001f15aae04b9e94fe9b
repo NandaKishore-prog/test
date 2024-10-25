@@ -1,0 +1,38 @@
+package main;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Main implements ActionListener {
+    JFrame frame;
+    JButton loginButton;
+
+    public Main() {
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1100, 800);
+        frame.setLayout(null);
+
+        loginButton = new JButton("Login");
+        loginButton.setBounds(500, 720, 100, 40);
+        loginButton.addActionListener(this);
+        frame.add(loginButton);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new Main();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == loginButton) {
+            frame.getContentPane().removeAll(); // Clear existing components
+            frame.add(new LoginPanel()); // Add the login panel
+            frame.revalidate();
+            frame.repaint();
+        }
+    }
+}

@@ -1,0 +1,105 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import snake_game.*;
+import mem_gamee.*;
+import spaceinvaders.*;
+import tictat.TicTacToe;
+
+public class Main1 implements ActionListener {
+    JFrame frame;
+    JButton button1, button2, button3, button4, button5, exitButton, logoutButton;
+
+    ImageIcon icon1 = new ImageIcon(Main1.class.getResource("snake.jpg"));
+    ImageIcon icon2 = new ImageIcon(Main1.class.getResource("memory card.jpg"));
+    ImageIcon icon3 = new ImageIcon(Main1.class.getResource("whacmole.png"));
+    ImageIcon icon4 = new ImageIcon(Main1.class.getResource("spaceinvader.jpg"));
+    ImageIcon icon5 = new ImageIcon(Main1.class.getResource("TicTacToe.jpg"));
+
+    public Main1(Main main) {
+        frame = new JFrame("Game Management System");
+        frame.setContentPane(new BackgroundPanel());
+
+        // Create buttons for games
+        button1 = createGameButton(icon1, e -> new SnakeGame(), 50, 50);
+        button2 = createGameButton(icon2, e -> new MemoryCardGame(), 400, 50);
+        button3 = createGameButton(icon3, e -> new WhacAMole(), 50, 400);
+        button4 = createGameButton(icon4, e -> new SpaceInvaders(), 400, 400);
+        button5 = createGameButton(icon5, e -> new TicTacToe(), 250, 750);
+
+        // Logout button
+        logoutButton = new JButton("Logout");
+        logoutButton.setBounds(20, 20, 100, 30);
+        customizeButton(logoutButton);
+        logoutButton.addActionListener(e -> {
+            main.loginFrame.setVisible(true);
+            frame.dispose();
+        });
+
+        // Exit button
+        exitButton = new JButton("Exit");
+        exitButton.setBounds(700, 20, 100, 30);
+        customizeButton(exitButton);
+        exitButton.addActionListener(e -> System.exit(0));
+
+        // Add buttons to frame
+        frame.add(button1);
+        frame.add(button2);
+        frame.add(button3);
+        frame.add(button4);
+        frame.add(button5);
+        frame.add(logoutButton);
+        frame.add(exitButton);
+
+        // Frame properties
+        frame.setLayout(null);
+        frame.setSize(800, 900);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private JButton createGameButton(ImageIcon icon, ActionListener actionListener, int x, int y) {
+        JButton button = new JButton(icon);
+        button.setBounds(x, y, 300, 300);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.addActionListener(actionListener);
+        return button;
+    }
+
+    private void customizeButton(JButton button) {
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setBackground(Color.DARK_GRAY);
+        button.setFocusPainted(false);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Placeholder for future actions
+    }
+
+    class BackgroundPanel extends JPanel {
+        Image bgImage;
+
+        public BackgroundPanel() {
+            ImageIcon bgIcon = new ImageIcon(Main1.class.getResource("gamebackground.jpg"));
+            bgImage = bgIcon.getImage();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}

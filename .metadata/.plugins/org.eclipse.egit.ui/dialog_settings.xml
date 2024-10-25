@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="EGit.KnownHosts">
+		<item value="bitbucket.org"/>
+		<item value="git.eclipse.org"/>
+		<item value="github.com"/>
+	</list>
+	<list key="RepositorySelectionPage.UsedUris">
+		<item value="https://github.com/ImKennyYip/whac-a-mole-java/blob/master/WhacAMole.java"/>
+		<item value="https://github.com/ImKennyYip/pokemon-memory-cards-java/tree/master/img"/>
+		<item value="https://github.com/ImKennyYip/pokemon-memory-cards-java.git"/>
+		<item value="https://github.com/ImKennyYip/pokemon-memory-cards-java/tree/master"/>
+	</list>
+</section>

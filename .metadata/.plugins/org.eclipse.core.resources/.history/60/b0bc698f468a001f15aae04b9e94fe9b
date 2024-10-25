@@ -1,0 +1,85 @@
+package main;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class LoginPanel extends JPanel implements ActionListener {
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JTextField recoveryQuestionField;
+    private JButton createAccountButton, signInButton;
+    private Image backgroundImage;
+
+    public LoginPanel() {
+        // Load the background image
+        ImageIcon bgIcon = new ImageIcon(getClass().getResource("gamebackground.jpg"));
+        backgroundImage = bgIcon.getImage();
+
+        // Set layout and create components
+        setLayout(null);
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(50, 150, 100, 30);
+        add(usernameLabel);
+
+        usernameField = new JTextField();
+        usernameField.setBounds(150, 150, 200, 30);
+        add(usernameField);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(50, 200, 100, 30);
+        add(passwordLabel);
+
+        passwordField = new JPasswordField();
+        passwordField.setBounds(150, 200, 200, 30);
+        add(passwordField);
+
+        JLabel recoveryLabel = new JLabel("Recovery Question:");
+        recoveryLabel.setBounds(50, 250, 150, 30);
+        add(recoveryLabel);
+
+        recoveryQuestionField = new JTextField("What is your favorite food?");
+        recoveryQuestionField.setBounds(200, 250, 200, 30);
+        add(recoveryQuestionField);
+
+        createAccountButton = new JButton("Create Account");
+        createAccountButton.setBounds(50, 300, 150, 30);
+        createAccountButton.addActionListener(this);
+        add(createAccountButton);
+
+        signInButton = new JButton("Sign In");
+        signInButton.setBounds(220, 300, 100, 30);
+        signInButton.addActionListener(this);
+        add(signInButton);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == createAccountButton) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            String recoveryAnswer = recoveryQuestionField.getText();
+
+            // Logic to create an account (store the username, password, and recovery answer)
+            // You may want to save these to a file or database for real implementation
+
+            JOptionPane.showMessageDialog(this, "Account created successfully!");
+        } else if (e.getSource() == signInButton) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+
+            // Logic to validate the user (check if the username and password are correct)
+            // You would typically check against stored credentials
+
+            JOptionPane.showMessageDialog(this, "Sign in successful!");
+        }
+    }
+}

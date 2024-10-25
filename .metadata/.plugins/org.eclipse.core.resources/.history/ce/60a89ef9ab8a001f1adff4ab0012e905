@@ -1,0 +1,259 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.util.HashMap;
+
+public class Main implements ActionListener {
+    JFrame loginFrame, createAccountFrame;
+    JButton loginButton, createAccountButton, forgotPasswordButton, submitButton, cancelButton;
+    JTextField usernameField, passwordField;
+    JTextField usernameCreateField, passwordCreateField, answerField;
+    JLabel usernameLabel, passwordLabel, questionLabel;
+    ImageIcon bgIcon;
+    Image bgImage;
+
+    // Store user credentials and recovery answers
+    HashMap<String, String> userAccounts = new HashMap<>();
+    HashMap<String, String> recoveryAnswers = new HashMap<>();
+
+    // Recovery questions
+    String[] questions = {
+        "Who is your favorite hero?",
+        "What is your pet's name?",
+        "Where is your home town?"
+    };
+
+    public Main() {
+        // Frame settings for login
+        loginFrame = new JFrame("Login to Game Management");
+        loginFrame.setContentPane(new BackgroundPanel());
+
+        // Username label
+        usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(350, 250, 100, 30);
+        usernameLabel.setForeground(Color.WHITE);
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Username field
+        usernameField = new JTextField();
+        usernameField.setBounds(450, 250, 200, 30);
+
+        // Password label
+        passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(350, 300, 100, 30);
+        passwordLabel.setForeground(Color.WHITE);
+        passwordLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Password field
+        passwordField = new JPasswordField();
+        passwordField.setBounds(450, 300, 200, 30);
+
+        // Login button settings
+        loginButton = new JButton("Login");
+        loginButton.setBounds(450, 350, 100, 40);
+        loginButton.setFont(new Font("Arial", Font.BOLD, 16));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Color.DARK_GRAY);
+        loginButton.setFocusPainted(false);
+        loginButton.addActionListener(this);
+
+        // Create Account button
+        createAccountButton = new JButton("Create Account");
+        createAccountButton.setBounds(570, 350, 150, 40);
+        createAccountButton.setFont(new Font("Arial", Font.BOLD, 16));
+        createAccountButton.setForeground(Color.WHITE);
+        createAccountButton.setBackground(Color.DARK_GRAY);
+        createAccountButton.setFocusPainted(false);
+        createAccountButton.addActionListener(this);
+
+        // Forgot Password button
+        forgotPasswordButton = new JButton("Forgot Password?");
+        forgotPasswordButton.setBounds(450, 400, 200, 30);
+        forgotPasswordButton.setFont(new Font("Arial", Font.BOLD, 14));
+        forgotPasswordButton.setForeground(Color.WHITE);
+        forgotPasswordButton.setBackground(Color.DARK_GRAY);
+        forgotPasswordButton.setFocusPainted(false);
+        forgotPasswordButton.addActionListener(this);
+
+        // Add components to login frame
+        loginFrame.add(usernameLabel);
+        loginFrame.add(usernameField);
+        loginFrame.add(passwordLabel);
+        loginFrame.add(passwordField);
+        loginFrame.add(loginButton);
+        loginFrame.add(createAccountButton);
+        loginFrame.add(forgotPasswordButton);
+
+        // Frame properties
+        loginFrame.setLayout(null);
+        loginFrame.setSize(1100, 800);
+        loginFrame.setVisible(true);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new Main();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == loginButton) {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            if (userAccounts.containsKey(username) && userAccounts.get(username).equals(password)) {
+                // Proceed to game management panel
+                new Main1(); // Placeholder for game management window
+                loginFrame.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(loginFrame, "Invalid username or password.");
+            }
+        } else if (e.getSource() == createAccountButton) {
+            openCreateAccountPanel(); // Open the panel to create a new account
+        } else if (e.getSource() == forgotPasswordButton) {
+            resetPassword();
+        } else if (e.getSource() == submitButton) {
+            createAccount();
+        } else if (e.getSource() == cancelButton) {
+            createAccountFrame.setVisible(false);
+            loginFrame.setVisible(true);
+        }
+    }
+
+    // Method to open the panel to create a new account
+    private void openCreateAccountPanel() {
+        // Frame settings for account creation
+        createAccountFrame = new JFrame("Create New Account");
+        createAccountFrame.setContentPane(new BackgroundPanel());
+
+        // Username label and field
+        JLabel usernameCreateLabel = new JLabel("Username:");
+        usernameCreateLabel.setBounds(350, 150, 100, 30);
+        usernameCreateLabel.setForeground(Color.WHITE);
+        usernameCreateLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        usernameCreateField = new JTextField();
+        usernameCreateField.setBounds(500, 150, 200, 30);
+
+        // Password label and field
+        JLabel passwordCreateLabel = new JLabel("Password:");
+        passwordCreateLabel.setBounds(350, 200, 100, 30);
+        passwordCreateLabel.setForeground(Color.WHITE);
+        passwordCreateLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        passwordCreateField = new JPasswordField();
+        passwordCreateField.setBounds(500, 200, 200, 30);
+
+        // Recovery question selection
+        questionLabel = new JLabel("Select a recovery question:");
+        questionLabel.setBounds(300, 250, 200, 30);
+        questionLabel.setForeground(Color.WHITE);
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        JComboBox<String> questionComboBox = new JComboBox<>(questions);
+        questionComboBox.setBounds(500, 250, 200, 30);
+
+        // Answer field for the selected question
+        answerField = new JTextField();
+        answerField.setBounds(500, 300, 200, 30);
+        answerField.setToolTipText("Answer for the selected question");
+
+        // Submit and cancel buttons
+        submitButton = new JButton("Submit");
+        submitButton.setBounds(450, 500, 100, 40);
+        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setBackground(Color.DARK_GRAY);
+        submitButton.setFocusPainted(false);
+        submitButton.addActionListener(this);
+
+        cancelButton = new JButton("Cancel");
+        cancelButton.setBounds(570, 500, 100, 40);
+        cancelButton.setFont(new Font("Arial", Font.BOLD, 16));
+        cancelButton.setForeground(Color.WHITE);
+        cancelButton.setBackground(Color.DARK_GRAY);
+        cancelButton.setFocusPainted(false);
+        cancelButton.addActionListener(this);
+
+        // Add components to account creation frame
+        createAccountFrame.add(usernameCreateLabel);
+        createAccountFrame.add(usernameCreateField);
+        createAccountFrame.add(passwordCreateLabel);
+        createAccountFrame.add(passwordCreateField);
+        createAccountFrame.add(questionLabel);
+        createAccountFrame.add(questionComboBox);
+        createAccountFrame.add(answerField);
+        createAccountFrame.add(submitButton);
+        createAccountFrame.add(cancelButton);
+
+        // Frame properties
+        createAccountFrame.setLayout(null);
+        createAccountFrame.setSize(1100, 800);
+        createAccountFrame.setVisible(true);
+        createAccountFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
+
+    // Method to create a new account
+    private void createAccount() {
+        String username = usernameCreateField.getText();
+        String password = passwordCreateField.getText();
+        String answer = answerField.getText();
+
+        // Validate that all fields are filled
+        if (username.isEmpty() || password.isEmpty() || answer.isEmpty()) {
+            JOptionPane.showMessageDialog(createAccountFrame, "Please fill in all required fields.");
+        } else {
+            userAccounts.put(username, password);
+            recoveryAnswers.put(username, answer); // Store the answer for the selected question
+            JOptionPane.showMessageDialog(createAccountFrame, "Account created successfully!");
+            createAccountFrame.setVisible(false);
+            loginFrame.setVisible(true);
+        }
+    }
+
+    // Method to handle password reset
+    private void resetPassword() {
+        String username = JOptionPane.showInputDialog(loginFrame, "Enter your username:");
+        if (username != null && recoveryAnswers.containsKey(username)) {
+            // Ask user to select the recovery question
+            String selectedQuestion = (String) JOptionPane.showInputDialog(loginFrame, "Select your recovery question:", "Recovery Question", JOptionPane.QUESTION_MESSAGE, null, questions, questions[0]);
+            if (selectedQuestion != null) {
+                String answer = JOptionPane.showInputDialog(loginFrame, selectedQuestion);
+
+                // Check if the answer is correct
+                if (answer != null && answer.equals(recoveryAnswers.get(username))) {
+                    String newPassword = JOptionPane.showInputDialog(loginFrame, "Enter your new password:");
+                    if (newPassword != null && !newPassword.isEmpty()) {
+                        userAccounts.put(username, newPassword); // Update password
+                        JOptionPane.showMessageDialog(loginFrame, "Password reset successfully!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(loginFrame, "Incorrect answer.");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(loginFrame, "Username not found.");
+        }
+    }
+
+    // Custom background panel class
+    class BackgroundPanel extends JPanel {
+        public BackgroundPanel() {
+            // Load background image (if necessary)
+            bgIcon = new ImageIcon("C:\\Users\\MUGILAN\\Documents\\loginpanel.jpg"); // Ensure this path is correct
+            bgImage = bgIcon.getImage();
+            setLayout(null);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this); // Draw background image
+        }
+    }
+}

@@ -1,0 +1,269 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import snake_game.*;
+import mem_gamee.*;
+import spaceinvaders.*;
+import tictat.TicTacToe;
+import montyandflower.*;
+
+public class main implements ActionListener {
+    JFrame loginFrame;
+    JButton loginButton, createAccountButton;
+    JTextField usernameField;
+    JLabel usernameLabel;
+    ImageIcon bgIcon;
+    Image bgImage;
+
+    public main() {
+        // Frame settings
+        loginFrame = new JFrame("Login to Game Management");
+        loginFrame.setContentPane(new BackgroundPanel()); // Setting the background panel
+
+        // Username label
+        usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(350, 250, 100, 30);
+        usernameLabel.setForeground(Color.WHITE);  // Set text color
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Username field
+        usernameField = new JTextField();
+        usernameField.setBounds(450, 250, 200, 30);
+
+        // Login button settings
+        loginButton = new JButton("Login");
+        loginButton.setBounds(450, 300, 100, 40);
+        loginButton.setFont(new Font("Arial", Font.BOLD, 16));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Color.DARK_GRAY);
+        loginButton.setFocusPainted(false);
+        loginButton.addActionListener(this);
+
+        // Create Account button settings
+        createAccountButton = new JButton("Create Account");
+        createAccountButton.setBounds(580, 300, 150, 40);
+        createAccountButton.setFont(new Font("Arial", Font.BOLD, 16));
+        createAccountButton.setForeground(Color.WHITE);
+        createAccountButton.setBackground(Color.DARK_GRAY);
+        createAccountButton.setFocusPainted(false);
+        createAccountButton.addActionListener(this);
+
+        // Add components to frame
+        loginFrame.add(usernameLabel);
+        loginFrame.add(usernameField);
+        loginFrame.add(loginButton);
+        loginFrame.add(createAccountButton);
+
+        // Frame properties
+        loginFrame.setLayout(null);
+        loginFrame.setSize(1100, 800);
+        loginFrame.setVisible(true);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new main();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == loginButton) {
+            // Proceed to game management panel
+            new MainGameManagement();  // Launch the game management system
+            loginFrame.setVisible(false);
+        } else if (e.getSource() == createAccountButton) {
+            createAccount();
+        }
+    }
+
+    private void createAccount() {
+        String username = JOptionPane.showInputDialog(loginFrame, "Enter your username:");
+        if (username == null || username.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(loginFrame, "Username cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String password = JOptionPane.showInputDialog(loginFrame, "Enter your password:");
+        if (password == null || password.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(loginFrame, "Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String recoveryQuestion = JOptionPane.showInputDialog(loginFrame, "What is your favorite food?");
+        if (recoveryQuestion == null || recoveryQuestion.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(loginFrame, "Recovery question cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Here, you would typically save the account details to a database or a file
+
+        JOptionPane.showMessageDialog(loginFrame, "Account created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // Background panel class to handle background image rendering
+    class BackgroundPanel extends JPanel {
+        public BackgroundPanel() {
+            bgIcon = new ImageIcon(main.class.getResource("gamebackground.jpg"));
+            bgImage = bgIcon.getImage();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}
+
+// MainGameManagement class remains unchanged
+class MainGameManagement implements ActionListener {
+    JFrame frame;
+    JButton button1, button2, button3, button4, button5, exitButton;
+
+    ImageIcon icon1 = new ImageIcon(MainGameManagement.class.getResource("snake.jpg"));
+    Image image1 = icon1.getImage();
+    Image resizedImage1 = image1.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+    ImageIcon resizedIcon1 = new ImageIcon(resizedImage1);
+
+    ImageIcon icon2 = new ImageIcon(MainGameManagement.class.getResource("memory card.jpg"));
+    Image image2 = icon2.getImage();
+    Image resizedImage2 = image2.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+    ImageIcon resizedIcon2 = new ImageIcon(resizedImage2);
+
+    ImageIcon icon3 = new ImageIcon(MainGameManagement.class.getResource("whacmole.png"));
+    Image image3 = icon3.getImage();
+    Image resizedImage3 = image3.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+    ImageIcon resizedIcon3 = new ImageIcon(resizedImage3);
+
+    ImageIcon icon4 = new ImageIcon(MainGameManagement.class.getResource("spaceinvader.png"));
+    Image image4 = icon4.getImage();
+    Image resizedImage4 = image4.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+    ImageIcon resizedIcon4 = new ImageIcon(resizedImage4);
+
+    ImageIcon icon5 = new ImageIcon(MainGameManagement.class.getResource("TicTacToe.jpg"));
+    Image image5 = icon5.getImage();
+    Image resizedImage5 = image5.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+    ImageIcon resizedIcon5 = new ImageIcon(resizedImage5);
+
+    ImageIcon bgIcon = new ImageIcon(MainGameManagement.class.getResource("gameimg01.jpg"));
+    Image bgImage = bgIcon.getImage();
+
+    public MainGameManagement() {
+        frame = new JFrame();
+        frame.setContentPane(new BackgroundPanel());
+
+        button1 = new JButton();
+        button1.setIcon(resizedIcon1);
+        customizeButton(button1);
+
+        button2 = new JButton();
+        button2.setIcon(resizedIcon2);
+        customizeButton(button2);
+
+        button3 = new JButton();
+        button3.setIcon(resizedIcon3);
+        customizeButton(button3);
+
+        button4 = new JButton();
+        button4.setIcon(resizedIcon4);
+        customizeButton(button4);
+
+        button5 = new JButton();
+        button5.setIcon(resizedIcon5);
+        customizeButton(button5);
+
+        // Exit Button customization
+        exitButton = new JButton("EXIT");
+        exitButton.setFont(new Font("cursive", Font.PLAIN, 19));
+        exitButton.setBounds(500, 720, 100, 40);
+        customizeButton(exitButton);
+        exitButton.setForeground(Color.WHITE);
+
+        button1.setBounds(50, 50, 300, 300);
+        button2.setBounds(400, 50, 300, 300);
+        button3.setBounds(50, 400, 300, 300);
+        button4.setBounds(400, 400, 300, 300);
+        button5.setBounds(750, 50, 300, 300);
+
+        frame.add(button1);
+        frame.add(button2);
+        frame.add(button3);
+        frame.add(button4);
+        frame.add(button5);
+        frame.add(exitButton);
+
+        frame.setLayout(null);
+        frame.setSize(1100, 800);
+        frame.setVisible(true);
+        button1.addActionListener(this);
+        button2.addActionListener(this);
+        button3.addActionListener(this);
+        button4.addActionListener(this);
+        button5.addActionListener(this);
+        exitButton.addActionListener(this);
+    }
+
+    // Method to customize buttons
+    private void customizeButton(JButton button) {
+        button.setContentAreaFilled(false);  // Make the button background transparent
+        button.setBorderPainted(false);      // Remove the border
+        button.setFocusPainted(false);       // Remove the focus highlight
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == button1) {
+            SnakeGame game = new SnakeGame();
+            SnakeGame.main(null);
+            frame.setVisible(false);
+        }
+        if (e.getSource() == button2) {
+            App app = new App();
+            App.main(null);
+            frame.setVisible(false);
+        }
+        if (e.getSource() == button3) {
+            App1 app1 = new App1();
+            try {
+                App1.main(null);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+            frame.setVisible(false);
+        }
+        if (e.getSource() == button4) {
+            SpaceInvaders spaceInvaders = new SpaceInvaders();
+            SpaceInvaders.main(null);
+            frame.setVisible(false);
+        }
+        if (e.getSource() == button5) {
+            TicTacToe ticTacToe = new TicTacToe();
+            TicTacToe.main(null);
+            frame.setVisible(false);
+        }
+        if (e.getSource() == exitButton) {
+            System.exit(0);
+        }
+    }
+
+    // Background panel class to handle background image rendering
+    class BackgroundPanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}

@@ -1,0 +1,172 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.util.HashMap;
+
+public class Main implements ActionListener {
+    JFrame loginFrame;
+    JButton loginButton, createAccountButton, forgotPasswordButton;
+    JTextField usernameField, passwordField;
+    JLabel usernameLabel, passwordLabel;
+    ImageIcon bgIcon;
+    Image bgImage;
+
+    // Store user credentials and recovery questions
+    HashMap<String, String> userAccounts = new HashMap<>();
+    HashMap<String, String> recoveryQuestions = new HashMap<>();
+
+    public Main() {
+        // Frame settings
+        loginFrame = new JFrame("Login to Game Management");
+        loginFrame.setContentPane(new BackgroundPanel()); // Setting the background panel
+
+        // Username label
+        usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(350, 250, 100, 30);
+        usernameLabel.setForeground(Color.WHITE);
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Username field
+        usernameField = new JTextField();
+        usernameField.setBounds(450, 250, 200, 30);
+
+        // Password label
+        passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(350, 300, 100, 30);
+        passwordLabel.setForeground(Color.WHITE);
+        passwordLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Password field
+        passwordField = new JTextField();
+        passwordField.setBounds(450, 300, 200, 30);
+
+        // Login button settings
+        loginButton = new JButton("Login");
+        loginButton.setBounds(450, 350, 100, 40);
+        loginButton.setFont(new Font("Arial", Font.BOLD, 16));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Color.DARK_GRAY);
+        loginButton.setFocusPainted(false);
+        loginButton.addActionListener(this);
+
+        // Create Account button
+        createAccountButton = new JButton("Create Account");
+        createAccountButton.setBounds(570, 350, 150, 40);
+        createAccountButton.setFont(new Font("Arial", Font.BOLD, 16));
+        createAccountButton.setForeground(Color.WHITE);
+        createAccountButton.setBackground(Color.DARK_GRAY);
+        createAccountButton.setFocusPainted(false);
+        createAccountButton.addActionListener(this);
+
+        // Forgot Password button
+        forgotPasswordButton = new JButton("Forgot Password?");
+        forgotPasswordButton.setBounds(450, 400, 200, 30);
+        forgotPasswordButton.setFont(new Font("Arial", Font.BOLD, 14));
+        forgotPasswordButton.setForeground(Color.WHITE);
+        forgotPasswordButton.setBackground(Color.DARK_GRAY);
+        forgotPasswordButton.setFocusPainted(false);
+        forgotPasswordButton.addActionListener(this);
+
+        // Add components to frame
+        loginFrame.add(usernameLabel);
+        loginFrame.add(usernameField);
+        loginFrame.add(passwordLabel);
+        loginFrame.add(passwordField);
+        loginFrame.add(loginButton);
+        loginFrame.add(createAccountButton);
+        loginFrame.add(forgotPasswordButton);
+
+        // Frame properties
+        loginFrame.setLayout(null);
+        loginFrame.setSize(1100, 800);
+        loginFrame.setVisible(true);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new Main();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == loginButton) {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            if (userAccounts.containsKey(username) && userAccounts.get(username).equals(password)) {
+                // Proceed to game management panel
+                new MainGameManagement();
+                loginFrame.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(loginFrame, "Invalid username or password.");
+            }
+        } else if (e.getSource() == createAccountButton) {
+            createAccount();
+        } else if (e.getSource() == forgotPasswordButton) {
+            resetPassword();
+        }
+    }
+
+    // Method to create a new account
+    private void createAccount() {
+        String username = JOptionPane.showInputDialog("Enter Username:");
+        if (username != null && !username.isEmpty()) {
+            String password = JOptionPane.showInputDialog("Enter Password:");
+            String recoveryAnswer = JOptionPane.showInputDialog("What is your favorite food?");
+            if (password != null && recoveryAnswer != null && !password.isEmpty() && !recoveryAnswer.isEmpty()) {
+                userAccounts.put(username, password);
+                recoveryQuestions.put(username, recoveryAnswer);
+                JOptionPane.showMessageDialog(loginFrame, "Account created successfully.");
+            } else {
+                JOptionPane.showMessageDialog(loginFrame, "Please fill in all fields.");
+            }
+        }
+    }
+
+    // Method to reset password
+    private void resetPassword() {
+        String username = JOptionPane.showInputDialog("Enter Username:");
+        if (username != null && recoveryQuestions.containsKey(username)) {
+            String answer = JOptionPane.showInputDialog("What is your favorite food?");
+            if (answer != null && answer.equals(recoveryQuestions.get(username))) {
+                String newPassword = JOptionPane.showInputDialog("Enter New Password:");
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    userAccounts.put(username, newPassword);
+                    JOptionPane.showMessageDialog(loginFrame, "Password reset successfully.");
+                } else {
+                    JOptionPane.showMessageDialog(loginFrame, "Please enter a new password.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(loginFrame, "Incorrect answer to recovery question.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(loginFrame, "Username not found.");
+        }
+    }
+
+    // Background panel class to handle background image rendering
+    class BackgroundPanel extends JPanel {
+        public BackgroundPanel() {
+            bgIcon = new ImageIcon(Main.class.getResource("gamebackground.jpg"));
+            bgImage = bgIcon.getImage();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}

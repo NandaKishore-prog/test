@@ -1,0 +1,133 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import snake_game.*;
+import mem_gamee.*;
+import mem_gamee.App;
+import spaceinvaders.*;
+import tictat.TicTacToe;
+import montyandflower.*;
+
+public class Main1 implements ActionListener {
+    JFrame frame;
+    JButton button1, button2, button3, button4, button5, exitButton;
+
+    // Load and resize images
+    ImageIcon icon1 = new ImageIcon(Main1.class.getResource("snake.jpg"));
+    ImageIcon icon2 = new ImageIcon(Main1.class.getResource("memory card.jpg"));
+    ImageIcon icon3 = new ImageIcon(Main1.class.getResource("whacmole.png"));
+    ImageIcon icon4 = new ImageIcon(Main1.class.getResource("spaceinvader.png"));
+    ImageIcon icon5 = new ImageIcon(Main1.class.getResource("TicTacToe.jpg"));
+    ImageIcon bgIcon = new ImageIcon(Main1.class.getResource("gameimg01.jpg"));
+
+    public Main1() {
+        frame = new JFrame("Gaming Hub");
+        frame.setContentPane(new BackgroundPanel());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setSize(1100, 800);
+        frame.setVisible(true);
+
+        // Initialize buttons with icons
+        button1 = createButton(icon1);
+        button2 = createButton(icon2);
+        button3 = createButton(icon3);
+        button4 = createButton(icon4);
+        button5 = createButton(icon5);
+
+        // Exit Button customization
+        exitButton = new JButton("EXIT");
+        exitButton.setFont(new Font("Cursive", Font.PLAIN, 19));
+        exitButton.setBounds(500, 720, 100, 40);
+        customizeButton(exitButton);
+        exitButton.setForeground(Color.WHITE);
+
+        // Set button positions
+        button1.setBounds(50, 50, 300, 300);
+        button2.setBounds(400, 50, 300, 300);
+        button3.setBounds(50, 400, 300, 300);
+        button4.setBounds(400, 400, 300, 300);
+        button5.setBounds(750, 50, 300, 300);
+
+        // Add buttons to the frame
+        frame.add(button1);
+        frame.add(button2);
+        frame.add(button3);
+        frame.add(button4);
+        frame.add(button5);
+        frame.add(exitButton);  // Add Exit Button to the frame
+
+        // Add action listeners
+        button1.addActionListener(this);
+        button2.addActionListener(this);
+        button3.addActionListener(this);
+        button4.addActionListener(this);
+        button5.addActionListener(this);
+        exitButton.addActionListener(this);  // ActionListener for Exit Button
+    }
+
+    public static void main(String[] args) {
+        new Main1();
+    }
+
+    // Method to create buttons with resized icons
+    private JButton createButton(ImageIcon icon) {
+        Image image = icon.getImage();
+        Image resizedImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+        JButton button = new JButton(new ImageIcon(resizedImage));
+        customizeButton(button);
+        return button;
+    }
+
+    // Method to customize buttons
+    private void customizeButton(JButton button) {
+        button.setContentAreaFilled(false);  // Make the button background transparent
+        button.setBorderPainted(false);      // Remove the border
+        button.setFocusPainted(false);       // Remove the focus highlight
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Launch corresponding game based on the button clicked
+        if (e.getSource() == button1) {
+            new SnakeGame();  // Launch Snake Game
+            frame.setVisible(false);
+        } else if (e.getSource() == button2) {
+            new App();  // Launch Memory Card Game
+            frame.setVisible(false);
+        } else if (e.getSource() == button3) {
+            new App1();  // Launch Whac-A-Mole Game
+            frame.setVisible(false);
+        } else if (e.getSource() == button4) {
+            new SpaceInvaders();  // Launch Space Invaders
+            frame.setVisible(false);
+        } else if (e.getSource() == button5) {
+            new TicTacToe();  // Launch Tic Tac Toe
+            frame.setVisible(false);
+        } else if (e.getSource() == exitButton) {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.exit(0);  // Exit the application
+            }
+        }
+    }
+
+    // Custom JPanel to set background image
+    class BackgroundPanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}
